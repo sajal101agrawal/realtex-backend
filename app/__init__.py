@@ -14,6 +14,15 @@ mail = Mail()
 def create_app(config_name='default'):
     app = Flask(__name__)
     
+    CORS(app, resources={r"/api/*": {"origins": [
+        "http://localhost:3000", 
+        "http://localhost:5173",
+        "https://cloud.realtex.ai",
+        "*"
+    ]}}, supports_credentials=True) 
+
+
+
     # Import config here to avoid circular imports
     from app.config import config
     app.config.from_object(config[config_name])
@@ -23,7 +32,7 @@ def create_app(config_name='default'):
     migrate.init_app(app, db)
     jwt.init_app(app)
     mail.init_app(app)
-    CORS(app)
+    # CORS(app)
     
     # Import and configure Swagger here to avoid circular imports
     from app.utils.swagger_utils import configure_swagger
